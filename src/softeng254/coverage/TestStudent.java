@@ -2,6 +2,7 @@ package softeng254.coverage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,28 @@ public class TestStudent {
 		middleList2.add("Doe");
 		Student student2 = new Student("John", middleList2, "Smith");
 		assertNotEquals(student1, student2);
+	}
+	
+	@Test
+	public void testNullConstruction() {
+		try {
+			new Student(null, (List<String>)null, null);
+			fail("RuntimeException should have been thrown");
+		}
+		catch(RuntimeException e) {
+			assertEquals(e.getMessage(), "Missing last name");
+		}
+	}
+	
+	@Test
+	public void testEmptyLastNameConstruction() {
+		try {
+			new Student(null, (List<String>)null, "");
+			fail("RuntimeException should have been thrown");
+		}
+		catch(RuntimeException e) {
+			assertEquals(e.getMessage(), "Missing last name");
+		}
 	}
 	
 	
