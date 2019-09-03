@@ -19,6 +19,12 @@ public class TestStudent {
 	}
 	
 	@Test
+	public void testEmptyExceptLast() {
+		Student student3Names = new Student("", "", "Smith");
+		assertEquals("Smith", student3Names.toString());
+	}
+	
+	@Test
 	public void testEqualsWhenEqual() {
 		Student student1 = new Student("John", "Doe", "Smith");
 		Student student2 = new Student("John", "Doe", "Smith");
@@ -51,8 +57,9 @@ public class TestStudent {
 	@Test
 	public void testEqualsWhenPreferredNotEqual() {
 		Student student1 = new Student("John", "Doe", "Smith");
-		student1.setPreferredName("Not John Doe Smith");
+		student1.setPreferredName(null);
 		Student student2 = new Student("John", "Doe", "Smith");
+		student2.setPreferredName("Joe");
 		assertNotEquals(student1, student2);
 	}
 	
@@ -79,9 +86,20 @@ public class TestStudent {
 	}
 	
 	@Test
-	public void testNullConstruction() {
+	public void testNullListConstruction() {
 		try {
 			new Student(null, (List<String>)null, null);
+			fail("RuntimeException should have been thrown");
+		}
+		catch(RuntimeException e) {
+			assertEquals(e.getMessage(), "Missing last name");
+		}
+	}
+	
+	@Test
+	public void testNullStringConstruction() {
+		try {
+			new Student(null, (String)null, null);
 			fail("RuntimeException should have been thrown");
 		}
 		catch(RuntimeException e) {
@@ -100,5 +118,79 @@ public class TestStudent {
 		}
 	}
 	
+	@Test
+	public void testPreferredName() {
+		Student student = new Student("John", "Doe", "Smith");
+		student.setPreferredName("Joey");
+		assertEquals("Joey", student.preferredName());
+	}
+	
+	@Test
+	public void testEmptyPreferredNameEmptyFirstMiddle() {
+		Student student = new Student("", "", "Smith");
+		student.setPreferredName("");
+		assertEquals("Smith", student.preferredName());
+	}
+	
+	@Test
+	public void testEmptyPreferredName() {
+		Student student = new Student("John", "", "Smith");
+		student.setPreferredName("");
+		assertEquals("John Smith", student.preferredName());
+	}
+	
+	@Test
+	public void testNormalupi() {
+		Student student = new Student("John", "", "Smith");
+		assertEquals("jsmi", student.upi());
+	}
+	
+	@Test
+	public void testEmptyFirstupi() {
+		Student student = new Student("", "", "Smith");
+		assertEquals("smi", student.upi());
+	}
+	
+	@Test
+	public void testShortLastupi() {
+		Student student = new Student("John", "", "do");
+		assertEquals("jdo", student.upi());
+	}
+	
+	@Test
+	public void testNormalLastNameFirst() {
+		List<String> middleList = new ArrayList<>();
+		middleList.add("Daisy");
+		middleList.add("Doe");
+		Student student = new Student("John", middleList, "Smith");
+		assertEquals("Smith, John Daisy Doe", student.lastNameFirst());
+	}
+	
+	@Test
+	public void testEmptyFirst() {
+		Student student = new Student("", "", "Smith");
+		assertEquals("Smith", student.lastNameFirst());
+	}
+	
+	@Test
+	public void testNormalInitialsName() {
+		List<String> middleList = new ArrayList<>();
+		middleList.add("Daisy");
+		middleList.add("Doe");
+		Student student = new Student("John", middleList, "Smith");
+		assertEquals("J. D. D. Smith", student.initialsName());
+	}
+	
+	@Test
+	public void testEmptyFirstInitialsName() {
+		Student student = new Student("", "'", "Smith");
+		assertEquals("' Smith", student.initialsName());
+	}
+	
+	@Test
+	public void testShortFirstInitialsName() {
+		Student student = new Student("J", "'", "Smith");
+		assertEquals("J ' Smith", student.initialsName());
+	}
 	
 }
